@@ -1,0 +1,9 @@
+
+public class GridMonitorDriver {
+
+	public static void main (String[] args) {
+		
+		String filename = args[0];
+		GridMonitor grid = new GridMonitor(filename);
+	}
+}

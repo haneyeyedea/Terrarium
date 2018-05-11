@@ -1,0 +1,35 @@
+import java.io.FileNotFoundException;
+
+public class GridMonitor implements GridMonitorInterface {
+	
+	private double[][] baseGrid;
+	private double[][] surroundingSumGrid;
+	private double[][] surroundingAvgGrid;
+	private double[][] deltaGrid;
+	private boolean[][] dangerGrid;
+	
+	public GridMonitor(String filename) throws FileNotFoundException {
+		
+	}
+
+	@Override
+	public double[][] getBaseGrid() {
+		return baseGrid;
+	}
+	@Override
+	public double[][] getSurroundingSumGrid() {
+		return surroundingSumGrid;
+	}
+	@Override
+	public double[][] getSurroundingAvgGrid() {
+		return surroundingAvgGrid;
+	}
+	@Override
+	public double[][] getDeltaGrid() {
+		return deltaGrid;
+	}
+	@Override
+	public boolean[][] getDangerGrid() {
+		return dangerGrid;
+	}
+}

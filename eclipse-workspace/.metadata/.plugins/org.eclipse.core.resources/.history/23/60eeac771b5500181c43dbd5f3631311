@@ -1,0 +1,190 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class GridMonitor implements GridMonitorInterface {
+	
+	private double[][] baseGrid;
+	private double[][] surroundingSumGrid;
+	private double[][] surroundingAvgGrid;
+	private double[][] deltaGrid;
+	private boolean[][] dangerGrid;
+	
+	public GridMonitor(String filename) throws FileNotFoundException {
+		int firstDim = 1;
+		int secondDim = 1;
+		File file = new File(filename);
+		
+		if(file.exists() && file.isFile()) {
+			try {
+				Scanner filescan = new Scanner(file);
+				int gridDim;
+				double number;
+				int lineCount = 0;
+			
+				while(filescan.hasNextLine()) {
+					String line = filescan.nextLine();
+					Scanner numscan = new Scanner(line);
+					int numCount = 0;
+				
+					while(numscan.hasNext()) {
+						if (lineCount == 0) {
+							gridDim = numscan.nextInt();
+							if (numCount == 0) {
+								firstDim = gridDim;
+							}
+							else {
+								secondDim = gridDim;
+								baseGrid = new double[firstDim][secondDim];
+							}
+						}
+						else {							
+							number = numscan.nextDouble();
+							baseGrid[lineCount - 1][numCount] = number;
+						}
+						
+						numCount++;
+					}
+				
+					lineCount++;
+					numscan.close();
+				}
+				filescan.close();
+			}
+			catch(FileNotFoundException e) {
+				System.out.println("File not found.");
+			}
+		}
+		
+		calculateSurroundingSumGrid(firstDim,secondDim);
+		calculateSurroundingAvgGrid(firstDim, secondDim);
+		calculateDeltaGrid(firstDim, secondDim);
+		calculateDangerGrid(firstDim, secondDim);
+	}
+	
+	/**
+	 * Creates an array of the same dimensions as the base grid. Calculates the sum of all adjacent cells and places the value in the 
+	 * specified cell. If the cell is on a border (or in a corner), the value of the specified cell is used in place of the missing cell
+	 * 
+	 * @param firstDim value of the x-dimension
+	 * @param secondDim value of the y-dimension
+	 */
+	public void calculateSurroundingSumGrid(int firstDim, int secondDim) {
+		surroundingSumGrid = new double[firstDim][secondDim];
+		for(int i = 0; i < surroundingSumGrid.length; i++) {
+			for(int j = 0; j < surroundingSumGrid[0].length; j++) {
+				double counter = 0;
+				
+				if (i > 0) {counter += baseGrid[i-1][j];}
+				else {counter += baseGrid[i][j];}
+				
+				if (i < surroundingSumGrid.length - 1) {counter += baseGrid[i+1][j];}
+				else {counter += baseGrid[i][j];}
+				
+				if (j > 0) {counter += baseGrid[i][j-1];}
+				else {counter += baseGrid[i][j];}
+				
+				if (j < surroundingSumGrid[0].length - 1) {counter += baseGrid[i][j+1];}
+				else {counter += baseGrid[i][j];}
+				
+				surroundingSumGrid[i][j] = counter;
+			}
+		}
+	}
+	
+	/**
+	 * Creates an array of the same dimensions as the base grid. Calculates the average value of all adjacent cells and places the value in
+	 * the specified cell. If the cell is on a border (or in a corner), the value of the specified cell is used in place of the missing cell
+	 * 
+	 * @param firstDim value of the x-dimension
+	 * @param secondDim value of the y-dimension
+	 */
+	public void calculateSurroundingAvgGrid(int firstDim, int secondDim) {
+		surroundingAvgGrid = new double[firstDim][secondDim];
+		for(int i = 0; i < surroundingAvgGrid.length; i++) {
+			for(int j = 0; j < surroundingAvgGrid[0].length; j++) {
+				surroundingAvgGrid[i][j] = surroundingSumGrid[i][j] / 4;
+			}
+		}
+	}
+	
+	/**
+	 * Creates an array of the same dimensions as the base grid. Calculates the maximum delta from the average of 50% of the average and 
+	 * places the value in the specified cell.
+	 * 
+	 * @param firstDim value of the x-dimension
+	 * @param secondDim value of the y-dimension
+	 */
+	public void calculateDeltaGrid(int firstDim, int secondDim) {
+		deltaGrid = new double[firstDim][secondDim];
+		for(int i = 0; i < deltaGrid.length; i++) {
+			for(int j = 0; j < deltaGrid[0].length; j++) {
+				deltaGrid[i][j] = Math.abs(surroundingAvgGrid[i][j] / 2);
+			}
+		}
+	}
+	
+	public void calculateDangerGrid(int firstDim, int secondDim) {
+		dangerGrid = new boolean[firstDim][secondDim];
+		for(int i = 0; i < surroundingSumGrid.length; i++) {
+			for(int j = 0; j < surroundingSumGrid[0].length; j++) {
+				double min = surroundingAvgGrid[i][j] - deltaGrid[i][j];
+				double max = surroundingAvgGrid[i][j] + deltaGrid[i][j];
+				boolean countBool = false;
+				
+				System.out.print(min +"-"+ max +"\t");
+				
+				if (i > 0) {
+					if(baseGrid[i-1][j] < min || baseGrid[i-1][j] > max) {countBool = true;}
+				}
+				else {
+					if(baseGrid[i][j] < min || baseGrid[i][j] > max) {countBool = true;}
+				}
+				
+				if (i < surroundingSumGrid.length - 1) {
+					if(baseGrid[i+1][j] < min || baseGrid[i+1][j] > max) {countBool = true;}
+				}
+				else {
+					if(baseGrid[i][j] < min || baseGrid[i][j] > max) {countBool = true;}
+				}
+				
+				if (j > 0) {
+					if(baseGrid[i][j-1] < min || baseGrid[i][j-1] > max) {countBool = true;}
+				}
+				else {
+					if(baseGrid[i][j] < min || baseGrid[i][j] > max) {countBool = true;}
+				}
+				
+				if (j < surroundingSumGrid[0].length - 1) {
+					if(baseGrid[i][j+1] < min || baseGrid[i][j+1] > max) {countBool = true;}
+				}
+				else {
+					if(baseGrid[i][j] < min || baseGrid[i][j] > max) {countBool = true;}
+				}
+				
+				System.out.println("");
+				dangerGrid[i][j] = countBool;
+			}
+		}
+	}
+	@Override
+	public double[][] getBaseGrid() {
+		return baseGrid;
+	}
+	@Override
+	public double[][] getSurroundingSumGrid() {
+		return surroundingSumGrid;
+	}
+	@Override
+	public double[][] getSurroundingAvgGrid() {
+		return surroundingAvgGrid;
+	}
+	@Override
+	public double[][] getDeltaGrid() {
+		return deltaGrid;
+	}
+	@Override
+	public boolean[][] getDangerGrid() {
+		return dangerGrid;
+	}
+}

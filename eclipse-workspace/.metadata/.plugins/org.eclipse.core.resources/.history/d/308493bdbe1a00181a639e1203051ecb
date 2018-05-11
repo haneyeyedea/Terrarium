@@ -1,0 +1,33 @@
+import java.util.Scanner;
+
+public class Homework4
+{
+    public static void main (String[] args)
+    {
+    
+        Scanner scan = new Scanner(System.in);
+    
+        private final int MIN_INT = 2;
+        int max = 0;
+    
+        while (max < 2)
+        {
+            System.out.print("Enter an integer (greater than 2): ");
+            max = scan.nextInt();
+        
+            if (max < 2)
+                System.out.println("That is not an integer greater than 2");
+        }
+    
+        int sum = 0;
+        for(int num = max; num >= MIN_INT; num--)
+        {
+            if (num % 2 == 0)
+            {
+                sum += num;
+            }
+        }
+        
+        System.out.println("The sum of all even integers between " +MIN_INT+ " and " +max+ " is " +sum);
+    }
+}

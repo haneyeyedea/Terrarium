@@ -1,0 +1,246 @@
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.Toolkit;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.Timer;
+
+/**
+ * CS 121 Project 1: Traffic Animation
+ *
+ * Animates a city
+ *
+ * @author BSU CS 121 Instructors
+ * @author Melodee Haney
+ */
+@SuppressWarnings("serial")
+public class TrafficAnimation extends JPanel
+{
+	private final int DELAY = 100; //milliseconds
+	private int xOffset = 0;
+	private int stepSize1 = 10;
+	private int stepSize2 = 5;
+
+	private final Color BACKGROUND_COLOR = new Color(66,167,244);
+	private final Color BUILDING_COLOR1 = new Color(244,158,66);
+	private final Color BUILDING_COLOR2 = new Color(188,180,193);
+	private final Color BUILDING_SHADE = new Color(234,35,9);
+	private final Color SIDEWALK_COLOR = new Color(205, 204, 206);
+	private final Color ROAD_COLOR = new Color(46, 44, 48);
+	private final Color ROAD_STRIPE = new Color(252,244,20);
+	
+	public void paintComponent(Graphics g)
+	{
+		// Get the current width and height of the window.
+		int width = getWidth(); // panel width
+		int height = getHeight(); // panel height
+
+		// Fill the graphics page with the background color.
+		g.setColor(BACKGROUND_COLOR);
+		g.fillRect(0, 0, width, height);
+		
+		// Create buildings
+		g.setColor(BUILDING_COLOR1);
+		g.fillRect(0, 0, width/4, 2*height/5);    //Building 1
+		g.fillRect(2*width/5, 0, 7*width/20, 2*height/5);  //Building 3
+		g.fillRect(3*width/4, 0, width/4, 2*height/5);  //Building 4
+		g.setColor(BUILDING_COLOR2);
+		g.fillRect(width/4, 3*height/20, 3*width/20, 5*height/20);  //Building 2
+		
+		g.setColor(Color.black);
+		g.drawRect(0, 0, width/4, 2*height/5);  //Building 1
+		g.drawRect(width/4, 3*height/20, 3*width/20, 5*height/20);  //Building 2
+		g.drawRect(2*width/5, 0, 7*width/20, 2*height/5);  //Building 3
+		g.drawRect(3*width/4, 0, width/4, 2*height/5);  //Building 4
+		
+		// Create windows
+		int windWid = 2*width/50;
+		int windHei = 2*height/25;
+		
+		g.setColor(Color.white);
+		g.fillRect(width/100, 3*height/100, windWid, windHei); //Building 1
+		g.fillRect(9*width/100, 3*height/100, windWid, windHei);
+		g.fillRect(17*width/100, 3*height/100, windWid, windHei);
+		
+		g.fillRect(width/100, 15*height/100, windWid, windHei);
+		g.fillRect(9*width/100, 15*height/100, windWid, windHei);
+		g.fillRect(17*width/100, 15*height/100, windWid, windHei);
+		
+		g.fillRect(width/100, 27*height/100, windWid, windHei);
+		g.fillRect(9*width/100, 27*height/100, windWid, windHei);
+		g.fillRect(17*width/100, 27*height/100, windWid, windHei);
+		
+		g.fillRect(87*width/200, 3*height/100, windWid, windHei); //Building 3
+		g.fillRect(103*width/200, 3*height/100, windWid, windHei);
+		g.fillRect(119*width/200, 3*height/100, windWid, windHei);
+		g.fillRect(135*width/200, 3*height/100, windWid, windHei);
+		
+		g.fillRect(87*width/200, 15*height/100, windWid, windHei); 
+		g.fillRect(103*width/200, 15*height/100, windWid, windHei);
+		g.fillRect(119*width/200, 15*height/100, windWid, windHei);
+		g.fillRect(135*width/200, 15*height/100, windWid, windHei);
+		
+		g.fillRect(87*width/200, 27*height/100, windWid, windHei); 
+		g.fillRect(103*width/200, 27*height/100, windWid, windHei);
+		g.fillRect(119*width/200, 27*height/100, windWid, windHei);
+		g.fillRect(135*width/200, 27*height/100, windWid, windHei);
+		
+		g.fillRect(79*width/100, 3*height/100, windWid, windHei); // Building 4
+		g.fillRect(87*width/100, 3*height/100, windWid, windHei);
+		g.fillRect(19*width/20, 3*height/100, windWid, windHei);
+		
+		g.fillRect(79*width/100, 15*height/100, windWid, windHei);
+		g.fillRect(87*width/100, 15*height/100, windWid, windHei);
+		g.fillRect(19*width/20, 15*height/100, windWid, windHei);
+		
+		g.fillRect(79*width/100, 27*height/100, windWid, windHei);
+		g.fillRect(87*width/100, 27*height/100, windWid, windHei);
+		g.fillRect(19*width/20, 27*height/100, windWid, windHei);
+		
+		// Create shade
+		g.setColor(BUILDING_SHADE);
+		g.fillRect(23*width/100,  15*height/100, 19*width/100, 3*height/25);
+		
+		g.setColor(Color.black);
+		g.drawRect(23*width/100,  15*height/100, 19*width/100, 3*height/25);
+		
+		// Create Sidewalk
+		g.setColor(SIDEWALK_COLOR);
+		g.fillRect(0, 2*height/5, width, 3*height/25);
+		
+		g.setColor(Color.black);
+		g.drawRect(0, 2*height/5, width, height/10);
+		g.drawRect(0, height/2, width, height/50);
+		
+		// Create Road and Text Oval
+		g.setColor(Color.white);
+		g.fillOval(width/4, 0, width/2, 3*height/20);
+		
+		g.setColor(ROAD_COLOR);
+		g.fillRect(0,13*height/25, width, 12*height/25);
+		
+		g.setColor(Color.black);
+		g.drawRect(0,13*height/25, width, 12*height/25);
+		g.drawOval(width/4, 0, width/2, 3*height/20);
+		
+		// Create Text
+		String str = "S u n d a y";
+		g.setFont(new Font("Calisto MT", Font.BOLD, 40));
+		g.drawString(str, 3*width/10, 9*height/80);
+		
+		// Create Median Stripes
+		int stripeWidth = width/9;
+		int stripeHeight = height/50;
+		int stripeSpace = width/15;
+		g.setColor(ROAD_STRIPE);
+		g.fillRect(0, 72*height/100, stripeWidth, stripeHeight);
+		g.fillRect(stripeWidth+stripeSpace, 72*height/100, stripeWidth, stripeHeight);
+		g.fillRect(2*stripeWidth+2*stripeSpace, 72*height/100, stripeWidth, stripeHeight);
+		g.fillRect(3*stripeWidth+3*stripeSpace, 72*height/100, stripeWidth, stripeHeight);
+		g.fillRect(4*stripeWidth+4*stripeSpace, 72*height/100, stripeWidth, stripeHeight);
+		g.fillRect(5*stripeWidth+5*stripeSpace, 72*height/100, stripeWidth, stripeHeight);
+		
+		
+		// Create Avatar
+		g.setColor(Color.blue);
+		g.fillRect(3*width/10, 3*height/10, 5*width/100, 15*height/100);
+		g.setColor(Color.red);
+		g.fillOval(11*width/40,  2*height/10, 10*width/100, 10*height/100);
+
+		// Calculate the new xOffset position of the moving object.
+		xOffset  = (xOffset + stepSize1) % (3*width/2);
+		int xOff = xOffset - 2*width/5;
+
+		// Draw Vehicle
+		int vehHeight = height / 5;
+		int vehWidth = width/5;
+		int vehY = 7*height / 10;
+		
+		g.setColor(Color.green);
+		g.fillRect(xOff, vehY+8*height/100, vehWidth, 10*vehHeight/20);
+		g.fillArc(xOff+vehWidth/15, vehY, 2*vehWidth/3, 4*vehHeight/5, 0, 180);
+		
+		g.setColor(Color.black);
+		g.fillArc(xOff+2*vehWidth/15, vehY+2*vehHeight/30, 8*vehWidth/15, 16*vehHeight/25, 0, 180);
+		g.fillOval(xOff+vehWidth/20, vehY+12*vehHeight/20,vehWidth/3, vehWidth/3);
+		g.fillOval(xOff+6*vehWidth/10, vehY+12*vehHeight/20,vehWidth/3, vehWidth/3);
+		
+		g.setColor(Color.white);
+		g.fillArc(xOff+13*vehWidth/60, 23*vehHeight/30, vehWidth/6, vehHeight/6, stepSize1%360, 180+stepSize1%360);
+		
+		
+		// Put your code above this line. This makes the drawing smoother.
+		Toolkit.getDefaultToolkit().sync();
+	}
+
+
+	//==============================================================
+	// You don't need to modify anything beyond this point.
+	//==============================================================
+
+
+	/**
+	 * Starting point for this program. Your code will not go in the
+	 * main method for this program. It will go in the paintComponent
+	 * method above.
+	 *
+	 * DO NOT MODIFY this method!
+	 *
+	 * @param args unused
+	 */
+	public static void main (String[] args)
+	{
+		// DO NOT MODIFY THIS CODE.
+		JFrame frame = new JFrame ("Traffic Animation");
+		frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().add(new TrafficAnimation());
+		frame.pack();
+		frame.setVisible(true);
+	}
+
+	/**
+	 * Constructor for the display panel initializes necessary variables.
+	 * Only called once, when the program first begins. This method also
+	 * sets up a Timer that will call paint() with frequency specified by
+	 * the DELAY constant.
+	 */
+	public TrafficAnimation()
+	{
+		// Do not initialize larger than 800x600. I won't be able to
+		// grade your project if you do.
+		int initWidth = 600;
+		int initHeight = 400;
+		setPreferredSize(new Dimension(initWidth, initHeight));
+		this.setDoubleBuffered(true);
+
+		//Start the animation - DO NOT REMOVE
+		startAnimation();
+	}
+
+	/**
+	 * Create an animation thread that runs periodically.
+	 * DO NOT MODIFY this method!
+	 */
+	private void startAnimation()
+	{
+		ActionListener timerListener = new TimerListener();
+		Timer timer = new Timer(DELAY, timerListener);
+		timer.start();
+	}
+
+	/**
+	 * Repaints the graphics panel every time the timer fires.
+	 * DO NOT MODIFY this class!
+	 */
+	private class TimerListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e) {
+			repaint();
+		}
+	}
+}

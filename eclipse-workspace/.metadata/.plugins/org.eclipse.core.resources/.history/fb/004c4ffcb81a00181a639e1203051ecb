@@ -1,0 +1,19 @@
+import java.util.Scanner;
+
+public class Homework4
+{
+    public static void main (String[] args)
+    {
+        Scanner scan = new Scanner(System.in);
+        
+        int num = -1;
+        while (num <= 0)
+        {
+            System.out.println("Enter a positive integer: ");
+            num = scan.nextInt();
+            
+            if (num <= 0)
+                System.out.println("That's not a positive integer.");
+        }
+    }
+}

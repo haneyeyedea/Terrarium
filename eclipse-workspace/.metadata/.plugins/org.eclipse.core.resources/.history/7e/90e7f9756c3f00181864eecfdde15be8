@@ -1,0 +1,207 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
+
+// The main game panel class. Must extend JPanel. Creates and adds sub-panels. Manages all game components and the ActionListeners
+public class MineWalkerPanel extends JPanel{
+	
+	private int moves;
+	private boolean minesVisible = false;
+	private boolean pathVisible = false;
+	
+	// Create colors
+	private final Color ZEROCOLOR = new Color(240,188,105);
+	private final Color ONECOLOR = new Color(73,212,232);
+	private final Color TWOCOLOR = new Color(93,137,212);
+	private final Color THREECOLOR = new Color(100,62,155);
+	private final Color EXPLODEDCOLOR = Color.BLACK;
+	private final Color STARTCOLOR = new Color(0,204,0);
+	private final Color ENDCOLOR = new Color(241,46,53);
+	
+	private final Color[] COLORS = {ZEROCOLOR,ONECOLOR,TWOCOLOR,THREECOLOR,EXPLODEDCOLOR,STARTCOLOR,ENDCOLOR};
+	
+	// declare panels
+	private MineFieldPanel board;
+	private JPanel colorKey;
+	private JPanel scoreBoard;
+	private JPanel useButtons;	
+	
+	// declare usable buttons
+	private JButton showMines = new JButton("Show Mines");
+	private JButton hideMines = new JButton("Hide Mines");
+	private JButton showPath = new JButton("Show Path");
+	private JButton hidePath = new JButton("Hide Path");
+	private JButton newGame = new JButton("New Game");
+	private JButton giveUp = new JButton("Give Up");
+	
+	// declare color key buttons
+	private JPanel zeroInd;
+	private JPanel oneInd;
+	private JPanel twoInd;
+	private JPanel threeInd;
+	private JPanel exploded;
+	private JPanel startSquare;
+	private JPanel endSquare;
+	
+	// declare text fields
+	private JLabel livesCount;
+	private JLabel scoreCount;
+	private JLabel currentGridsize;
+	
+	public MineWalkerPanel(int width, int height) {
+		
+		setLayout(new BorderLayout());
+		
+		board = new MineFieldPanel(new SquareListener(), width, height);
+		
+		// create usable buttons panel
+		useButtons = new JPanel();
+		
+		useButtons.removeAll();
+		chooseMines();
+		choosePath();
+		useButtons.revalidate();
+		
+		// create color key
+		colorKey = new JPanel();
+		colorKey.setBorder(BorderFactory.createTitledBorder("Color Key"));
+		colorKey.setLayout(new BoxLayout(colorKey, BoxLayout.Y_AXIS));
+		
+		zeroInd = new JPanel();
+		zeroInd.setBorder(BorderFactory.createRaisedBevelBorder());
+		zeroInd.add(new JLabel("0 Adjacent Mines"));
+		zeroInd.setBackground(ZEROCOLOR);
+		colorKey.add(zeroInd);
+		
+		oneInd = new JPanel();
+		oneInd.setBorder(BorderFactory.createRaisedBevelBorder());
+		oneInd.add(new JLabel("1 Adjacent Mine"));
+		oneInd.setBackground(ONECOLOR);
+		colorKey.add(oneInd);
+		
+		twoInd = new JPanel();
+		twoInd.setBorder(BorderFactory.createRaisedBevelBorder());
+		twoInd.add(new JLabel("2 Adjacent Mines"));
+		twoInd.setBackground(TWOCOLOR);
+		colorKey.add(twoInd);
+		
+		threeInd = new JPanel();
+		threeInd.setBorder(BorderFactory.createRaisedBevelBorder());
+		threeInd.add(new JLabel("3 Adjacent Mines"));
+		threeInd.setBackground(THREECOLOR);
+		colorKey.add(threeInd);
+		
+		exploded = new JPanel();
+		exploded.setBorder(BorderFactory.createRaisedBevelBorder());
+		JLabel expTitle = new JLabel("Exploded Mines");
+		expTitle.setForeground(Color.WHITE);
+		exploded.add(expTitle);
+		exploded.setBackground(EXPLODEDCOLOR);
+		colorKey.add(exploded);
+		
+		startSquare = new JPanel();
+		startSquare.setBorder(BorderFactory.createRaisedBevelBorder());
+		startSquare.add(new JLabel("Start"));
+		startSquare.setBackground(STARTCOLOR);
+		colorKey.add(startSquare);
+		
+		endSquare = new JPanel();
+		endSquare.setBorder(BorderFactory.createRaisedBevelBorder());
+		endSquare.add(new JLabel("End"));
+		endSquare.setBackground(ENDCOLOR);
+		colorKey.add(endSquare);
+		
+		// create scoreboard
+		scoreBoard = new JPanel();
+		TitledBorder tb = BorderFactory.createTitledBorder("Scoreboard");
+		tb.setTitleJustification(TitledBorder.RIGHT);
+		scoreBoard.setBorder(tb);
+		scoreBoard.setLayout(new BoxLayout(scoreBoard, BoxLayout.Y_AXIS));
+		
+		livesCount = new JLabel("Lives: ");
+		scoreCount = new JLabel("Score: ");
+		scoreBoard.add(livesCount);
+		scoreBoard.add(scoreCount);
+		
+		// set layout positions
+		this.removeAll();
+		add(board, BorderLayout.CENTER);
+		add(colorKey, BorderLayout.WEST);
+		add(scoreBoard, BorderLayout.EAST);
+		add(useButtons,BorderLayout.SOUTH);
+		this.revalidate();
+		
+		
+	}
+	
+	public void chooseMines() {
+		if(minesVisible) {
+			useButtons.add(hideMines);
+			hideMines.addActionListener(new MineListener());
+		}
+		else {
+			useButtons.add(showMines);
+			showMines.addActionListener(new MineListener());
+		}
+			
+	}
+	
+	public void choosePath() {
+		if(pathVisible) {
+			useButtons.add(hidePath);
+			hidePath.addActionListener(new PathListener());
+		}
+		else {
+			useButtons.add(showPath);
+			showPath.addActionListener(new PathListener());
+		}
+			
+	}
+	
+	private class MineListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(minesVisible) {
+				minesVisible = false;
+				System.out.println(minesVisible);
+			}
+			else
+				minesVisible = true;
+			
+		}
+		
+	}
+	
+	private class PathListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(pathVisible)
+				pathVisible = false;
+			else
+				pathVisible = true;
+			
+		}
+		
+	}
+	
+	private class SquareListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+
+}

@@ -1,0 +1,17 @@
+public class Homework4
+{
+    public static void main (String[] args)
+    {
+        int min = 0, max = 10;
+        
+        for (int rows = min; rows < max; rows++)
+        {
+            
+            for (int star = max; star >= rows; star--)
+            {
+                System.out.print("*");
+            }
+            System.out.println("");
+        }
+    }
+}

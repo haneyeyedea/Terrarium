@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename field &apos;violet&apos; in &apos;LitePegButton&apos; to &apos;VIOLET&apos;&#x0A;- Original project: &apos;lab12&apos;&#x0A;- Original element: &apos;LitePegButton.violet&apos;&#x0A;- Renamed element: &apos;LitePegButton.VIOLET&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" delegate="false" deprecate="false" description="Rename field &apos;violet&apos;" flags="589826" getter="false" id="org.eclipse.jdt.ui.rename.field" input="/&lt;{LitePegButton.java[LitePegButton^violet" name="VIOLET" references="true" setter="false" stamp="1523036504124" textual="false" version="1.0"/>
+</session>

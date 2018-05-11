@@ -1,0 +1,18 @@
+public class Homework4
+{
+    public static void main (String[] args)
+    {
+        int min = 0, max = 10;
+        
+        for (int star = max; star < min; star--)
+        {
+            System.out.print("*");
+            
+            for (int space = min; space <= max; space++)
+            {
+                System.out.print(" ");
+            }
+            System.out.println("");
+        }
+    }
+}
