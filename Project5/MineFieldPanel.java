@@ -1,0 +1,241 @@
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Random;
+
+import javax.swing.JPanel;
+
+// The mine field panel class. Must extend JPanel. Creates and manages grid of MineFieldButtons.
+@SuppressWarnings("serial")
+public class MineFieldPanel extends JPanel{
+	
+	// Create colors
+	private final Color ZEROCOLOR = new Color(240,188,105);
+	private final Color ONECOLOR = new Color(73,212,232);
+	private final Color TWOCOLOR = new Color(93,137,212);
+	private final Color THREECOLOR = new Color(100,62,155);
+	private final Color EXPLODEDCOLOR = Color.BLACK;
+	private final Color STARTCOLOR = new Color(0,204,0);
+	private final Color ENDCOLOR = new Color(241,46,53);
+	private final Color MINECOLOR = new Color(255,111,101);
+	private final Color PATHCOLOR = new Color(105,255,81);
+	private final Color[] colors = {ZEROCOLOR,ONECOLOR,TWOCOLOR,THREECOLOR,EXPLODEDCOLOR,STARTCOLOR,ENDCOLOR,MINECOLOR,PATHCOLOR};
+		
+	private static final int PERCENT_MINES_DEFAULT = 25;
+	private MineFieldButton[][] buttons;
+	private RandomWalk walk;
+	ArrayList<Point> path;
+	private int currentX;
+	private int currentY;
+	private int percentMines = PERCENT_MINES_DEFAULT;
+	private int numMines;
+	private int dim;
+	
+	public MineFieldPanel(ActionListener listener, int dim) {
+		this.dim = dim;
+		buttons = new MineFieldButton[dim][dim];
+		
+		this.setLayout(new GridLayout(buttons.length, buttons[0].length, 1, 1));
+		this.setPreferredSize(new Dimension(600, 600));
+		
+		newPanel();
+		//debugging();
+	}
+	public Color[] getColors() {
+		return colors;
+	}
+	
+	public void newPanel() {
+		createButtons();
+		createRandomWalk();
+		createMines();
+		createPanel();
+	}
+	
+	public void createPanel() {
+		this.removeAll();
+		
+		addButtons();
+		setButtonStatus();
+		setActiveButtons();
+		setColors();
+		
+		this.invalidate();
+		this.revalidate();
+	}
+	/*
+	public void debugging() {
+		for(int i = 0; i < buttons.length; i++) {
+			for(int j = 0; j < buttons[0].length; j++) {
+				System.out.print(buttons[i][j].getMineBool() + "\t");
+			}
+			System.out.println();
+		}
+		System.out.println();
+		for(int i = 0; i < buttons.length; i++) {
+			for(int j = 0; j < buttons[0].length; j++) {
+				System.out.print(buttons[i][j].getMineStatusNum() + "\t");
+			}
+			System.out.println();
+		}
+	}
+	*/
+	public void setButtonStatus() {
+		System.out.println(currentX + ", " + currentY);
+		if(currentX > 0) {buttons[currentX-1][currentY].setStatusShow();}
+		if(currentX < buttons.length-1) {buttons[currentX+1][currentY].setStatusShow();}
+		if(currentY > 0) {buttons[currentX][currentY-1].setStatusShow();}
+		if(currentY < buttons[0].length-1) {buttons[currentX][currentY+1].setStatusShow();}
+	}
+	public void createButtons() {
+		for(int i = 0; i < buttons.length; i++) {
+			for(int j = 0; j < buttons[0].length; j++) {
+				buttons[i][j] = new MineFieldButton();
+			}
+		}
+	}
+	
+	public void addButtons() {
+		for(int i = 0; i < buttons.length; i++) {
+			for(int j = 0; j < buttons[0].length; j++) {
+				this.add(buttons[i][j]);
+			}
+		}
+	}
+	
+	public void createRandomWalk() {
+		// Call RandomWalk and create array list of points on the path
+		walk = new RandomWalk(dim);
+		walk.createWalk();
+		path = walk.getPath();
+		System.out.println(walk.toString());        // Path debugging - DELETE
+		
+		// Get the starting point and set initial current point
+		Point start = walk.getStartPoint();
+		currentX = (int) start.getY();
+		currentY = (int) start.getX();
+		
+		// Set boolean value for solvable path
+		for (Point p : path) {
+			int xVal = (int) p.getY();
+			int yVal = (int) p.getX();
+			buttons[yVal][xVal].setPathBool(true);
+		}
+		
+	}
+	
+	public void createMines() {
+		int minesCount = 0;
+		Random rand = new Random();
+		numMines = dim*dim*percentMines / 100;
+		while (minesCount < numMines) {
+			int xVal = rand.nextInt(buttons.length);
+			int yVal = rand.nextInt(buttons[0].length);
+			boolean curMineStat = buttons[yVal][xVal].getMineBool();
+			boolean curPathStat = buttons[yVal][xVal].getPathBool();
+			if(!curMineStat && ! curPathStat) {
+				buttons[yVal][xVal].setMineBool(true);
+			}
+			minesCount = countMines();
+		}
+		
+		
+	}
+	
+	public int countMines() {
+		int numMines = 0;
+		for(int i = 0; i < buttons.length; i++) {
+			for(int j = 0; j < buttons[0].length; j++) {
+				if(buttons[i][j].getMineBool()) {
+					numMines++;
+				}
+			}
+		}
+		return numMines;
+	}
+	
+	public void setActiveButtons() {
+		
+		for (int i = 0; i < buttons.length; i++) {
+			for (int j = 0; j < buttons[0].length; j++) {
+				if(i > 0 && j == currentY && i == currentX - 1) {
+					buttons[i][j].setEnabled(true);
+				}
+				else if(j > 0 && j == currentY - 1 && i == currentX) {
+					buttons[i][j].setEnabled(true);
+				}
+				else if(i < buttons.length - 1 && j == currentY && i == currentX + 1) {
+					buttons[i][j].setEnabled(true);
+				}
+				else if(j < buttons[0].length - 1 && j == currentY + 1 && i == currentX) {
+					buttons[i][j].setEnabled(true);
+				}
+				else {
+					buttons[i][j].setEnabled(false);
+				}
+			}
+		}
+		
+	}
+	
+	public void setPathColor(Boolean pathVisible) {
+		for(int i = 0; i < buttons.length; i++) {
+			for(int j = 0; j < buttons[0].length; j++) {
+				if(!buttons[i][j].getStatusShow() && buttons[i][j].getPathBool()) {
+					buttons[i][j].setPathColor(colors[8]);
+					buttons[i][j].setPathShow(pathVisible);
+				}
+			}
+		}
+	}
+	
+	public void setMineColor(Boolean minesVisible) {
+		for(int i = 0; i < buttons.length; i++) {
+			for(int j = 0; j < buttons[0].length; j++) {
+				if(!buttons[i][j].getStatusShow() && buttons[i][j].getMineBool()) {
+					buttons[i][j].setPathColor(colors[7]);
+					buttons[i][j].setPathShow(minesVisible);
+				}
+			}
+		}
+	}
+	
+	public void setSquareNums() {
+		for(int i = 0; i < buttons.length; i++) {
+			for(int j = 0; j < buttons[0].length; j++) {
+				int mineStatusNum = 0;
+			
+				if (i > 0 && buttons[i-1][j].getMineBool()) {mineStatusNum++;}
+				if (i < buttons.length - 1 && buttons[i+1][j].getMineBool()) {mineStatusNum++;}
+				if (j > 0 && buttons[i][j-1].getMineBool()) {mineStatusNum++;}
+				if (i < buttons[0].length - 1 && buttons[i][j+1].getMineBool()) {mineStatusNum++;}
+				buttons[i][j].setMineStatusNum(mineStatusNum);
+			}
+		}
+	}
+	
+	public void setColors() {
+		for(int i = 0; i < buttons.length; i++) {
+			for(int j = 0; j < buttons[0].length; j++) {
+				if(i == buttons.length - 1 && j == 0) {
+					buttons[i][j].setStatusColor(colors[5]);
+					buttons[i][j].setStatusShow();
+					}
+				else if(i == 0 && j == buttons[0].length - 1) {
+					buttons[i][j].setStatusColor(colors[6]);
+					buttons[i][j].setStatusShow();
+					}
+				else {buttons[i][j].setStatusColor(colors[buttons[i][j].getMineStatusNum()]);}
+			}
+		}
+	}
+	
+	public void resetStatus() {
+		for(int i = 0; i < buttons.length; i++) {
+			for(int j = 0; j < buttons[0].length; j++) {buttons[i][j].resetStatus();}
+		}
+	}
+}
