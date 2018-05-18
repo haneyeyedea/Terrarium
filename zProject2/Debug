@@ -1,0 +1,68 @@
+****************
+* Debugging Journal for ArrayList
+* CS 221
+* 5/15/2018
+* Melodee Haney
+****************
+
+
+The java interface SimpleSet defines the methods used by ArraySet, in which a collection of unique 
+elements is maintained. The order of elements in this "simple set" is not important. SimpleSet:
+	* can count the size of the set
+	* can determine if the set is empty
+	* can determine if a passed element is already part of the set
+	* can add an element to the set (if it does not already exist in the set)
+	* can remove an element from the set, throwing an exception if that element does not exist in the set
+
+The class ArraySet implements the SimpleSet interface, and constructs an array with either a default or defined size.
+It defines a variable "rear" that keeps track of the index of the next empty space in the array, which also corresponds 
+to the size of values in the array.
+
+SetTester is a class that was created to test the functionality of the methods from ArraySet. Different tests will set up 
+various arrays and add/ remove predefined elements and compare them against the expected values.
+
+ArraySet was tested using SetTester, and the class is failing multiple tests. I am going to use Eclipse Debugger to
+find what issues are afflicting ArraySet. This documents my debugging process:
+	1. The first failed test was in NEW EMPTY SET; emptySet_testIsEmpty. The main method calls "runTests()", in which 
+	the affected method is "test_emptySet()". The print statement "..testIsEmpty" is found to call the method testIsEmpty 
+	with parameters "emptySet() and Result.True. This creates a new ArraySet<Integer>(2). I decided to place my first 
+	breakpoint at line 656 where the testIsEmpty method begins. The method creates a 2-object array, and both elements 
+	list as "null". testIsEmpty tests the set against the ArraySet's method isEmpty. It does this by looking at the "rear" 
+	variable of the object. Looking at the debugger Variable rear, it is zero, as it should be with a size of zero. It 
+	looks as if the method is testing it incorrectly. Indeed, it is returning empty-true when rear > 0. It should be 
+	returning empty-true when rear ==0. I changed the conditional to reflect this. On running SetTester the next time, 
+	the testIsEmpty passed.
+	2. The next test that failed is in SCENARIO: [ ] -> add(A) -> [A]; emptySet_addA_A_testIsEmpty. This is where the method 
+	test_emptySet_addA_A is called, and "testIsEmpty" is where emptySet_addA_A() is called with Result.False. This creates a 
+	new empty set, then adds "ELEMENT_A", which is "1". I know now that testing the empty test will return correctly, so I 
+	want to test how this element is added to the set and rear is reset. I added a breakpoint at line 134 when the method is
+	called to add the new element. During the step-throughs, I see that the array and rear values are correct at 2xnull and 0. 
+	As stepping through, it is tested that the set does not contain "1", that the value of rear is not outside of the array 
+	length. The correct next index is identified, and the element of "1" is added correctly to it. However, the rear variable 
+	remains at "0". It should increment when an element is added. Corrected by adding rear++ after the addition. I ran the test 
+	again, and it passed.
+	3. The next failure is within SCENARIO: [A] -> add(B) -> [A,B] after A_addB_AB_testAddC. Rather than a FAIL, a statement 
+	"testRemove caught unexpected java.lang.ArrayIndexOutOfBoundsException: 2, and the last method on the call stack is at 
+	ArraySet.remove, line 75. It's possible that the remove method had been used before, so I'm going to add my breakpoint at 
+	the first particular call, A_addB_AB_testRemoveA, line 263. Doing a quick step over, the first and second elements were 
+	added to the array and rear updated to 2 correctly. In the T remove method, it is correctly conditioned on the first element 
+	since it equals the element that we're looking for. retVal is correctly updated to not null and the array rearrangement loop 
+	is entered. During the rearrangement loop, the second element is correctly reassigned to the first element and i is 
+	incremented to 1. This is still less than rear (which, remember, is 2), so it enters the rearrangement loop again. But rear 
+	is the next Empty element space, so what it is now trying to do is to grab an empty element to place in index 1. To resolve 
+	the issue, I will re-condition the rearrangement loop to be i <= rear rather than i < rear. I run the test again and it again 
+	fails. I realize that I was catching an off-by-one error, but moved to correct it before thinking about it. I want the loop 
+	to stop when we're two less than the empty index, or the out of bounds will still be occurring. I then changed the conditional 
+	to i < rear-1.
+	
+After these three issues were corrected, he tests then all passed, and the summary totals showed zero failed tests in the SetTester.
+The assignment confirmed that all other given classes were bug-free, so I feel confident that, after having examined all methods in 
+the only affected class, that this program is working correctly.
+	
+	
+	
+	
+	
+	
+	
+	
