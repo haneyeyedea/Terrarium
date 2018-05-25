@@ -1,0 +1,12 @@
+import java.awt.event.ActionListener;
+
+import javax.swing.JPanel;
+
+// The mine field panel class. Must extend JPanel. Creates and manages grid of MineFieldButtons.
+public class MineFieldPanel extends JPanel{
+	
+	public MineFieldPanel(ActionListener listener, int width, int height) {
+		
+	}
+
+}

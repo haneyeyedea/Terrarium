@@ -1,0 +1,221 @@
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.Toolkit;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.Timer;
+
+/**
+ * CS 121 Project 1: Traffic Animation
+ *
+ * Animates a [put your description here]
+ *
+ * @author BSU CS 121 Instructors
+ * @author [put your name here]
+ */
+@SuppressWarnings("serial")
+public class TrafficAnimation extends JPanel
+{
+	// This is where you declare constants and variables that need to keep their
+	// values between calls	to paintComponent(). Any other variables should be
+	// declared locally, in the method where they are used.
+
+	/**
+	 * A constant to regulate the frequency of Timer events.
+	 * Note: 100ms is 10 frames per second - you should not need
+	 * a faster refresh rate than this
+	 */
+	private final int DELAY = 100; //milliseconds
+
+	/**
+	 * The anchor coordinate for drawing / animating. All of your vehicle's
+	 * coordinates should be relative to this offset value.
+	 */
+	private int x1Offset = 0;
+	
+
+	/**
+	 * The number of pixels added to xOffset each time paintComponent() is called.
+	 */
+	private int stepSize1 = 10;
+	private int stepSize2 = 5;
+
+	private final Color BACKGROUND_COLOR = new Color(66,167,244);
+	private final Color BUILDING_COLOR1 = new Color(244,158,66);
+	private final Color BUILDING_COLOR2 = new Color(188,180,193);
+	private final Color SIDEWALK_COLOR = new Color(205, 204, 206);
+	private final Color ROAD_COLOR = new Color(46, 44, 48);
+	private final Color ROAD_STRIPE = new Color(252,244,20);
+	
+	/* This method draws on the panel's Graphics context.
+	 * This is where the majority of your work will be.
+	 *
+	 * (non-Javadoc)
+	 * @see java.awt.Container#paint(java.awt.Graphics)
+	 */
+	public void paintComponent(Graphics g)
+	{
+		// Get the current width and height of the window.
+		int width = getWidth(); // panel width
+		int height = getHeight(); // panel height
+
+		// Fill the graphics page with the background color.
+		g.setColor(BACKGROUND_COLOR);
+		g.fillRect(0, 0, width, height);
+		
+		// Create buildings
+		g.setColor(BUILDING_COLOR1);
+		g.fillRect(0, 0, width/4, 2*height/5);    //Building 1
+		g.fillRect(2*width/5, 0, 7*width/20, 2*height/5);  //Building 3
+		g.fillRect(3*width/4, 0, width/4, 2*height/5);  //Building 4
+		g.setColor(BUILDING_COLOR2);
+		g.fillRect(width/4, 3*height/20, 3*width/20, 5*height/20);  //Building 2
+		
+		g.setColor(Color.black);
+		g.drawRect(0, 0, width/4, 2*height/5);  //Building 1
+		g.drawRect(width/4, 3*height/20, 3*width/20, 5*height/20);  //Building 2
+		g.drawRect(2*width/5, 0, 7*width/20, 2*height/5);  //Building 3
+		g.drawRect(3*width/4, 0, width/4, 2*height/5);  //Building 4
+		
+		// Create windows
+		g.setColor(Color.white);
+		g.fillRect(3*width/100, 3*height/100, 2*width/50,2*height/25);
+		
+		// Create Sidewalk
+		g.setColor(SIDEWALK_COLOR);
+		g.fillRect(0, 2*height/5, width, 3*height/25);
+		
+		g.setColor(Color.black);
+		g.drawRect(0, 2*height/5, width, height/10);
+		g.drawRect(0, height/2, width, height/50);
+		
+		// Create Road and Text Oval
+		g.setColor(Color.white);
+		g.fillOval(width/4, 0, width/2, 3*height/20);
+		
+		g.setColor(ROAD_COLOR);
+		g.fillRect(0,13*height/25, width, 12*height/25);
+		
+		g.setColor(Color.black);
+		g.drawRect(0,13*height/25, width, 12*height/25);
+		g.drawOval(width/4, 0, width/2, 3*height/20);
+		
+		// Create Text
+		String str = "S u n d a y";
+		g.setFont(new Font("Calisto MT", Font.BOLD, 40));
+		g.drawString(str, 3*width/10, 9*height/80);
+		
+		// Create Median Stripes
+		int stripeWidth = width/9;
+		int stripeHeight = height/50;
+		int stripeSpace = width/15;
+		g.setColor(ROAD_STRIPE);
+		g.fillRect(0, 72*height/100, stripeWidth, stripeHeight);
+		g.fillRect(stripeWidth+stripeSpace, 72*height/100, stripeWidth, stripeHeight);
+		g.fillRect(2*stripeWidth+2*stripeSpace, 72*height/100, stripeWidth, stripeHeight);
+		g.fillRect(3*stripeWidth+3*stripeSpace, 72*height/100, stripeWidth, stripeHeight);
+		g.fillRect(4*stripeWidth+4*stripeSpace, 72*height/100, stripeWidth, stripeHeight);
+		g.fillRect(5*stripeWidth+5*stripeSpace, 72*height/100, stripeWidth, stripeHeight);
+		
+		
+		// Create Avatar
+		g.setColor(Color.blue);
+		g.fillRect(3*width/10, 3*height/10, 5*width/100, 15*height/100);
+		g.setColor(Color.red);
+		g.fillOval(11*width/40,  2*height/10, 10*width/100, 10*height/100);
+
+		// Calculate the new xOffset position of the moving object.
+		x1Offset  = (x1Offset + stepSize1) % width;
+
+		// TODO: Use width, height, and xOffset to draw your scalable objects
+		// at their new positions on the screen
+
+		// This draws a green square. Replace it with your own object.
+		int squareSide = height / 5;
+		int squareY = 13*height / 16 - squareSide / 2;
+		
+		g.setColor(Color.green);
+		g.fillRect(x1Offset, squareY, squareSide, squareSide);
+		
+		g.setColor(Color.black);
+		g.fillOval(x1Offset+3, squareY+50, 50, 50);
+		g.fillRect(x1Offset+40, squareY+10, 30, 30);
+		
+		
+		
+		
+		// Put your code above this line. This makes the drawing smoother.
+		Toolkit.getDefaultToolkit().sync();
+	}
+
+
+	//==============================================================
+	// You don't need to modify anything beyond this point.
+	//==============================================================
+
+
+	/**
+	 * Starting point for this program. Your code will not go in the
+	 * main method for this program. It will go in the paintComponent
+	 * method above.
+	 *
+	 * DO NOT MODIFY this method!
+	 *
+	 * @param args unused
+	 */
+	public static void main (String[] args)
+	{
+		// DO NOT MODIFY THIS CODE.
+		JFrame frame = new JFrame ("Traffic Animation");
+		frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().add(new TrafficAnimation());
+		frame.pack();
+		frame.setVisible(true);
+	}
+
+	/**
+	 * Constructor for the display panel initializes necessary variables.
+	 * Only called once, when the program first begins. This method also
+	 * sets up a Timer that will call paint() with frequency specified by
+	 * the DELAY constant.
+	 */
+	public TrafficAnimation()
+	{
+		// Do not initialize larger than 800x600. I won't be able to
+		// grade your project if you do.
+		int initWidth = 600;
+		int initHeight = 400;
+		setPreferredSize(new Dimension(initWidth, initHeight));
+		this.setDoubleBuffered(true);
+
+		//Start the animation - DO NOT REMOVE
+		startAnimation();
+	}
+
+	/**
+	 * Create an animation thread that runs periodically.
+	 * DO NOT MODIFY this method!
+	 */
+	private void startAnimation()
+	{
+		ActionListener timerListener = new TimerListener();
+		Timer timer = new Timer(DELAY, timerListener);
+		timer.start();
+	}
+
+	/**
+	 * Repaints the graphics panel every time the timer fires.
+	 * DO NOT MODIFY this class!
+	 */
+	private class TimerListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e) {
+			repaint();
+		}
+	}
+}

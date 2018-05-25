@@ -1,0 +1,6 @@
+import javax.swing.JButton;
+
+// The mine field button class. Must extend JButton. Represents and manages the state of a single button in the MineFieldGrid
+public class MineFieldButton extends JButton{
+
+}
