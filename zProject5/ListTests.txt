@@ -418,8 +418,8 @@ Define tests for at least 21 change scenarios, in addition to the 3 given as exa
     add(1,C) throws no Exception
     add(2,C) throws no Exception
     add(3,C) throws IndexOutOfBoundsException
-    removeFirst() returns A
-    removeLast() returns B
+    //removeFirst() returns A
+    //removeLast() returns B
     remove(A) returns A
     remove(B) returns B
     remove(C) throws NoSuchElementException
