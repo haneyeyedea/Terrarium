@@ -19,7 +19,7 @@ public class ListTester {
 		goodList, badList, arrayList, singleLinkedList, doubleLinkedList
 	};
 	// TODO: THIS IS WHERE YOU CHOOSE WHICH LIST TO TEST
-	private final static ListToUse LIST_TO_USE = ListToUse.badList;
+	private final static ListToUse LIST_TO_USE = ListToUse.goodList;
 
 	// possible results expected in tests
 	private enum Result {
@@ -146,6 +146,8 @@ public class ListTester {
 		String STRING_AB = "AB";
 		Integer[] LIST_AC = {ELEMENT_A, ELEMENT_C};
 		String STRING_AC = "AC";
+		Integer[] LIST_CB = {ELEMENT_C, ELEMENT_B};
+		String STRING_CB = "CB";
 		Integer[] LIST_ABC = {ELEMENT_A, ELEMENT_B, ELEMENT_C};
 		String STRING_ABC = "ABC";
 		Integer[] LIST_CAB = {ELEMENT_C, ELEMENT_A, ELEMENT_B};
@@ -187,6 +189,8 @@ public class ListTester {
 		testThreeElementList(AB_addCToIndex0_CAB, "AB_addCToIndex0_CAB", LIST_CAB, STRING_CAB);
 		testThreeElementList(AB_addCToIndex1_ACB, "AB_addCToIndex1_ACB", LIST_ACB, STRING_ACB);
 		//2-element to changed 2-element via set()
+		testTwoElementList(AB_setIndex0ToC_CB, "AB_setIndex0ToC_CB", LIST_CB, STRING_CB);
+		testTwoElementList(AB_setIndex1ToC_AC, "AB_setIndex1ToC_AC", LIST_AC, STRING_AC);
 		//3-element to 2-element
 		testTwoElementList(ABC_removeAtIndex1_AC, "ABC_removeAtIndex1_AC", LIST_AC, STRING_AC);
 		//3-element to changed 3-element via set()
@@ -465,6 +469,27 @@ public class ListTester {
 		return list;
 	}
 	private Scenario<Integer> ABC_removeAtIndex1_AC = () -> ABC_removeAtIndex1_AC();
+	
+	
+	/** Scenario: [A, B] -> set(0,C) -> [C, B] 
+	 * @return [C, B] after set(0,C)
+	 */
+	private IndexedUnsortedList<Integer> AB_setIndex0ToC_CB() {
+		IndexedUnsortedList<Integer> list = A_addToRearB_AB(); 
+		list.set(0,ELEMENT_C);
+		return list;
+	}
+	private Scenario<Integer> AB_setIndex0ToC_CB = () -> AB_setIndex0ToC_CB();
+	
+	/** Scenario: [A, B] -> set(1,C) -> [A, C] 
+	 * @return [A, C] after set(1,C)
+	 */
+	private IndexedUnsortedList<Integer> AB_setIndex1ToC_AC() {
+		IndexedUnsortedList<Integer> list = A_addToRearB_AB(); 
+		list.set(1,ELEMENT_C);
+		return list;
+	}
+	private Scenario<Integer> AB_setIndex1ToC_AC = () -> AB_setIndex1ToC_AC();
 	
 	/** Scenario: [A, B, C] -> set(0, D) -> [D, B, C] 
 	 * @return [D, B, C] after set(0,D)
