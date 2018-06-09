@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
  * An Iterator with working remove() method is implemented, but
  * ListIterator is unsupported.
  * 
- * @author 
+ * @author melodee
  * 
  * @param <T> type to store
  */
@@ -276,6 +276,9 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 		return size;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		StringBuilder str = new StringBuilder("[");
 		Iterator<T> it = iterator();
