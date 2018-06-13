@@ -4,6 +4,7 @@ import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 /**
+ * ##############Changed since last grading###################
  * Single-linked node implementation of IndexedUnsortedList.
  * An Iterator with working remove() method is implemented, but
  * ListIterator is unsupported.
@@ -324,14 +325,13 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 
 		@Override
 		public boolean hasNext() {
-			if(iterModCount != modCount) {
-				throw new ConcurrentModificationException();
-			}
+			checkConcurrentMod();
 			return (nextNode != null);
 		}
 
 		@Override
 		public T next() {
+			checkConcurrentMod();
 			if (!hasNext()) {
 				throw new NoSuchElementException();
 			}
@@ -344,6 +344,7 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 		
 		@Override
 		public void remove() {
+			checkConcurrentMod();
 			if (!canRemove){
 				throw new IllegalStateException();
 			}
@@ -369,6 +370,10 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 			modCount++;
 			iterModCount++;
 			size--;
+		}
+		
+		private void checkConcurrentMod() {
+			if (modCount != iterModCount) {throw new ConcurrentModificationException();}
 		}
 	}
 }
