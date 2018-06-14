@@ -22,17 +22,6 @@ README - this file
 
 COMPILING AND RUNNING:
 
- Give the command for compiling the program, the command
- for running the program, and any usage instructions the
- user needs.
- 
- These are command-line instructions for a system like onyx.
- They have nothing to do with Eclipse or any other IDE. They
- must be specific - assume the user has Java installed, but
- has no idea how to compile or run a Java program from the
- command-line.
- 
- e.g.
  From the directory containing all source files, compile the
  driver class (and all dependencies) with the command:
  $ javac ListTester.java
@@ -40,29 +29,52 @@ COMPILING AND RUNNING:
  Run the compiled class file with the command:
  $ java ListTester
 
- Console output will give the results after the program finishes.
+ Console output will give the results after the program finishes. Dependency
+ files can be used as a list application with expected functions detailed
+ in the interface file IndexedUnsortedList.
 
 
 PROGRAM DESIGN AND IMPORTANT CONCEPTS:
 
- Explain the main concepts and organization of your program so that
- the reader can understand how your program works. This is not a repeat
- of javadoc comments or an exhaustive listing of all methods, but an
- explanation of the critical algorithms and object interactions that make
- up the program.
-
- If your program has multiple classes, explain the main responsibilities 
- of each class. Explain how the classes work together to achieve the
- program goals. If there are important interfaces, explain their roles
- as well.
+ The IUDoubleLinkedList was created to give the user the expected functionality
+ of an indexed unsorted list using double linked nodes. 
+ 	1. When first created, constructor initializes an empty list of objects
+ 	of the user specified type
+ 	2. There are methods included to add elements to the list in various places:
+ 	the front of the list, the back of the list, after a user-specified element,
+ 	and after a user-specified index number.
+ 	3. There are methods included to remove elements from the list in various
+ 	places: the first element in the list, the last element in the list, removing
+ 	the first instance of a user-specified element in the list, and removing the
+ 	element residing at the user-specified index. 
+ 	4. The last list-affecting method, outside of the iterator, is the set method,
+ 	which replaces the element in the user-specified index with another user-specified
+ 	element.
+ 	5. The remaining methods, outside of the iterator, are all informational methods, 
+ 	which find elements, find elements at indeces, report list size, and a toString
+ 	method.
+ 	6. Contains a list iterator that contains expected iterator methods as well as 
+ 	other list affecting methods such as add, remove, and change. Iterator can be
+ 	initialized with an index parameter of starting position in the list. 
+ The ListIterator is used within the general list methods for navigation throughout
+ the list. Many of the list methods were duplicate functions and codes of the iterator
+ so the iterator methods were used rather than rewriting. The list class is an 
+ implementation of the IndexedUnsortedList interface.
  
- If you were responsible for designing the program's classes and choosing
- how they work together, why did you design the program this way? What, if 
- anything, could be improved? 
-
- This is the sort of information someone who really wants to
- understand your program - possibly to make future enhancements -
- would want to know.
+ The ListTester was created before writing the List class to define the expected
+ functionality of the List methods by.... Testing it and checking the actual output
+ vs what we want the List to output. We tested empty lists, 1-element lists, 2-element
+ lists, and 3-element lists. Each method of both the list and the iterator are tested,
+ with combinations both valid and invalid. For any invalid calls, the expected exception
+ that should be thrown can be detected.
+ Each testing scenario is printed to the console along with the toString output, and the
+ statistics of total tests that passed/failed. Printing the names of all tests is optional,
+ but printing a list of failed tests only is default. At the end of all testing, statistics
+ on the whole program are detailed with a percentage of passing tests. There are nearly
+ four-and-a-half thousand tests that are run on the list class. This was extremely helpful
+ when writing the list class as it was meant to mimic every boundary solution and any unique
+ situations that may arise. It caught many problems that might not have otherwise been detected
+ through typical testing.
 
 TESTING:
 
@@ -70,6 +82,16 @@ TESTING:
  requirements? Can your program handle bad input? Is your program 
  idiot-proof? How do you know? What are the known issues / bugs
  remaining in your program?
+ 
+ The class was written following the interface to ensure that it met every
+ defined condition. 
+ 
+ The most important testing tool was the ListTester class. It was written before the List
+ class was and it guided the coding as it went. I ran it after completed each method to
+ gauge whether or not the method was written effectively. Once all methods were written,
+ I used the debugger in conjunction with the ListTester's print lines to diagnose issues
+ and step through the class to find any remaining issues. I believed that this was a 
+ complete and thorough testing and feel confident we received effective results. 
 
 
 DISCUSSION:
@@ -78,22 +100,27 @@ DISCUSSION:
  and testing. What problems did you have? What did you have to research
  and learn on your own? What kinds of errors did you get? How did you 
  fix them?
+
+ Overall, it seems like we slowly built up to writing this class with other lists and testers
+ that we'd written. Because of this, there weren't as many challenges as I would have expected.
+ Using the tester class and the debugger made for a methodical and thorough writing
+ process rather than write, read, and manually debug that we'd been doing before.
  
- What parts of the project did you find challenging? Is there anything
- that finally "clicked" for you in the process of working on this project?
- 
- 
-EXTRA CREDIT:
-
- If the project had opportunities for extra credit that you attempted,
- be sure to call it out so the grader does not overlook it.
-
-
-----------------------------------------------------------------------------
-
-All content in a README file is expected to be written in clear English with
-proper grammar, spelling, and punctuation. If you are not a strong writer,
-be sure to get someone else to help you with proofreading. Consider all project
-documentation to be professional writing for your boss and/or potential
-customers.
-
+ There were still, however, a few small problems that I encountered:
+ 	1. I created the iterator method before any of the list methods so that I could use them 
+ 	within the list methods. This meant that not much testing was completed during the first
+ 	part of the writing. This resulted in one or two bugs that I did not expect, such as 
+ 	checking the condition of "nextNode" when it was sometimes a null node, and the condition
+ 	of having two nodes left when removing elements. The tester class quickly picked up on
+ 	these issues once the class was functional.
+ 	
+ 	2. The hardest thing to remember to do was getting both the next and the previous references
+ 	of each node. Before I got used to it, it seemed overkill to set so many references on one
+ 	node. Even after becoming accustomed to it, I found that there were a few instances where
+ 	the next/ previous references were missing. This was, again, recovered by the tester class.
+ 	
+ 	3. The most work that was put into the writing was the iterator remove method. I chose to
+ 	use a -1, 0, 1 integer to detect whether or not the previous/next/ or neither methods were
+ 	the last list-affecting methods that were called. Setting up the conditions and conditionals
+ 	took a great deal of consideration. Drawing diagrams for each scenario and movement made was
+ 	essential to drafting the method and needed no further modification after testing.
