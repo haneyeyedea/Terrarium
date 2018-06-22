@@ -1,0 +1,4 @@
+InvalidFileFormatException: The first line of the file must contain two integers: ROWS COLS
+	at CircuitBoard.<init>(CircuitBoard.java:75)
+	at CircuitTracer.<init>(CircuitTracer.java:81)
+	at CircuitTracer.main(CircuitTracer.java:33)

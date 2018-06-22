@@ -1,0 +1,4 @@
+InvalidFileFormatException: There must be both a starting and ending point
+	at CircuitBoard.<init>(CircuitBoard.java:119)
+	at CircuitTracer.<init>(CircuitTracer.java:81)
+	at CircuitTracer.main(CircuitTracer.java:33)

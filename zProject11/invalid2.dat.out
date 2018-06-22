@@ -1,0 +1,4 @@
+InvalidFileFormatException: There may only be one ending position
+	at CircuitBoard.<init>(CircuitBoard.java:105)
+	at CircuitTracer.<init>(CircuitTracer.java:81)
+	at CircuitTracer.main(CircuitTracer.java:33)

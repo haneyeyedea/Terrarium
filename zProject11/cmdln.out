@@ -1,0 +1,4 @@
+Three arguments required: 
+     * first arg: -s for stack or -q for queue
+     * second arg: -c for console output or -g for GUI output
+     * third arg: input file name 

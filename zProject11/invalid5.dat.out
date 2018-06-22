@@ -1,0 +1,4 @@
+InvalidFileFormatException: Invalid character at 2, 0
+	at CircuitBoard.<init>(CircuitBoard.java:111)
+	at CircuitTracer.<init>(CircuitTracer.java:81)
+	at CircuitTracer.main(CircuitTracer.java:33)

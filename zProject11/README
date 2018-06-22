@@ -1,0 +1,90 @@
+****************
+* Project 11/ Circuit Tracer
+* CS221
+* 6/21/2018
+* Melodee Haney
+**************** 
+
+OVERVIEW:
+ 
+ Circuit Tracer is a program that reads in a specifically formatted
+ text file and parses out a grid representing an open circuit. The program
+ uses brute strength to find all possible paths that offer the shortest
+ possible route between the designated starting and ending points and 
+ displays all of these routes to the console.
+
+
+INCLUDED FILES:
+
+ * CircuitBoard.java - class defining the board during modification
+ * CircuitTracer.java - main class that drives the in/ out and paths
+ * Storage.java - class defining the object that stores all en-route paths
+ * TraceState.java - class defining the path object
+ * InvalidFileFormatException.java - class for modified formatting exception
+ * OccupiedPositionException.java - class for modified formatting exception
+ * README - excessive requirement of the project
+
+COMPILING AND RUNNING:
+
+ From the directory containing all source files, compile the
+ driver class (and all dependencies) with the command:
+ $ javac CircuitTracer.java 
+
+ Run the compiled class file with the command:
+ $ java CircuitTracer -1 -2 inputfile.dat
+        -1, first argument, use -s for stack or -q for queue storage
+        -2, second argument, use -c to use default output to console
+        inputfile.dat, use file name of the input circuit board
+
+ Console output will give the results of all solution paths of the shortest
+ path after the program finishes.
+
+
+PROGRAM DESIGN AND IMPORTANT CONCEPTS:
+ 
+ Beginning with the helping classes:
+ CircuitBoard - parses the input file, looking for a specific format. The first
+ line should contain two integers representing the number of rows and columns
+ in the circuit board. The circuit board itself is a grid of characters representing
+ open, closed, beginning, and ending cells. An object is created containing an array
+ of all of the characters and two points: the starting and ending points. Certain 
+ accessor and modifier methods are present, as well as a toString method that outputs
+ the grid of characters.
+ 
+ TraceState - is created with parameter of the CircuitBoard and a starting position after
+ the starting point. The TraceState keeps track of a certain path from beginning to end 
+ and holds the modified CircuitBoard with 'T' characters along it's current path. Accessor
+ and modifier methods allow access to the path.
+ 
+ Storage - is used to collect all TraceStates until they have been determined the final 
+ paths or not. It is capable of storing as a stack or queue, and contains methods to add
+ TraceStates to it, remove TraceStates from it, and other accessor and modifier methods.
+ It can also determine if the path is adjacent to the ending point. 
+ 
+ CircuitTracer - the main class in the project, this class brings all elements together, 
+ deciding which Storage method to use, reading in the command line arguments, finding the 
+ best paths and storing them in a bestPaths array, and outputting to the console all 
+ solutions. 
+ 
+
+TESTING:
+ 
+ The project was given with a tester class that tested some basic functionality, such as
+ the constructor set up and the outputs of the file. It was basic, so a great deal of 
+ reading was necessary to determine if the correct error messages were being displayed. The 
+ great deal of initial testing was done with a very small circuit board and seeing the output
+ as I went.
+
+
+DISCUSSION:
+ 
+ The most time-consuming part was the extra credit, as GUIs have a great deal of work
+ involved before any basic testing can be done. I didn't get it completed successfully.
+ 
+ Other than that, the project was fairly well defined and did not have a great deal of flexibility
+ in style. Straightforward.
+ 
+ 
+EXTRA CREDIT:
+
+ I started the GUI portion, but could not get all components to work together, not submitted.

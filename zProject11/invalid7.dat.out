@@ -1,0 +1,4 @@
+InvalidFileFormatException: The number of columns in row 2 should be 3. Str Length: 4
+	at CircuitBoard.<init>(CircuitBoard.java:92)
+	at CircuitTracer.<init>(CircuitTracer.java:81)
+	at CircuitTracer.main(CircuitTracer.java:33)
